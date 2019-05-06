@@ -83,6 +83,40 @@ Edit `UssdIntroduction/settings.py` and make this change in the INSTALLED_APPS s
 
  Lets do this.
 
+We will follow django patterns.
+
+We start by editing the core/views.py and making this simple change:
+
+
+    from ussd.core import UssdView
+
+
+    class AccountInfoView(UssdView):
+        pass
+
+What are we doing here. We are importing `UssdView`, from the `ussd_airflow` app we installed.
+We then create a simple class `AccountInfoView` and make it inherit from `UssdView`. This will make our class(`AccountInfoView`) have all
+the properties and methods exposed by `UssdView`.
+`UssdView` will convert a normal web request to a ussd request. The major difference between a web
+and a ussd request is a ussd request must be in a session. By inheriting from `UssdView`, our class
+`AccountInfoView` can now tie requests it receives to a session.
+
+Next lets edit the `UssdIntroduction/urls.py` and add a url that will link to `AccountInfoView` that we created.
+
+After the change, the file looks like this.
+
+    from django.contrib import admin
+    from django.urls import path
+    from core.views import AccountInfoView
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('ussd/', AccountInfoView.as_view())
+    ]
+
+    This change is to add `ussd' path, so that a request to `http://localhost:8006/ussd`
+    is routed to `AccountInfoView` which will serve a response back.
+
 
 
 

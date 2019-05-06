@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from ussd.core import UssdView
 
-# Create your views here.
+
+class AccountInfoView(UssdView):
+    pass
