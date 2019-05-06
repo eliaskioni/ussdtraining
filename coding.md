@@ -245,12 +245,12 @@ First lets run the application:
 
 Sample interactions,
 
-[welcome screen][welcome-screen.png]
+![welcome screen][welcome-screen.png]
 
 
 User respond with `1` and is served with his balance information.
 
-[Balance screen][balance-screen.png]
+![Balance screen][balance-screen.png]
 
 We are done, for more info, check our prod code, read on django and ussd airflow.
 

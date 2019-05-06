@@ -38,3 +38,5 @@ So the moment a USSD app is deployed to a network, it’s instantly available to
 our live products in Ivory Coast, Rwanda and my favourite, Riziki in Kenya.
 
  ![Riziki Kenya][Riziki.png]
+
+[CODING][coding.md]
