@@ -85,7 +85,7 @@ Edit `UssdIntroduction/settings.py` and make this change in the INSTALLED_APPS s
 
 We will follow django patterns.
 
-We start by editing the core/views.py and making this simple change:
+We start by editing the `core/views.py` and making this simple change:
 
 
     from ussd.core import UssdView
@@ -118,5 +118,139 @@ After the change, the file looks like this.
     is routed to `AccountInfoView` which will serve a response back.
 
 
+Next, lets add our menus.
 
+We begin by making this change in the `core/views.py` file and its now looks like:
+
+    from ussd.core import UssdView, UssdRequest
+    import os
+
+
+    class AccountInfoView(UssdView):
+        path = os.path.dirname(os.path.abspath(__file__))
+        customer_journey_conf = path + "/ussd_journey.yml"
+
+        def post(self, request):
+            session_id = request.data.get('session_id')
+            service_code = request.data.get('service_code')
+            phone_number = request.data.get('phone_number')
+            user_input = request.data.get('user_input')
+            return UssdRequest(
+                session_id=session_id,
+                phone_number=phone_number,
+                ussd_input=user_input,
+                service_code=service_code,
+                customer_journey_namespace=self.customer_journey_namespace,
+                language='en'
+            )
+
+     Whats going on:
+
+     We adding customer_journey_conf property, this is the file that will hold
+     our customer journey in YAML syntax.
+
+     We then create a post function, this will make our class to accept POST reqeusts.
+
+     In the function, we initialize UssdRequest, the role of this class is to
+     convert the web request to a ussd requests, and hand it over to ussd airflow.
+
+
+     From here on, ussd airflow will deal with the request, read the yaml file with our screens,
+     and render the correct response back.
+
+
+Finally, lets take a look at the `core/ussd_journey.yml`
+
+    initial_screen: welcome_screen
+
+    welcome_screen:
+      type: menu_screen
+      text:
+         en:
+           Welcome
+      error_message:
+        en: |
+          Invalid selection. Please try again.
+      options:
+          - text:
+              en: |
+                Balance
+              default: en
+            next_screen: Balance
+          - text:
+               en: |
+                 Phone Number
+               default: en
+            next_screen: PhoneNumber
+
+
+    Balance:
+      type: quit_screen
+      text:
+        en: |
+          Your balance is KES 100.
+        default: en
+
+    PhoneNumber:
+      type: quit_screen
+      text:
+        en: |
+          Your phone number is {{phone_number}}.
+        default: en
+
+
+    This file defines the journey the customer will have.
+
+    The first entry is initial_screen, which marks  the first point where airflow
+    should start reading and serving the menu from.
+
+    initial_screen: welcome_screen, here its point to the next screen to which to proceed to
+    which is,
+
+    welcome_screen:
+      type: menu_screen
+      text:
+         en:
+           Welcome
+      error_message:
+        en: |
+          Invalid selection. Please try again.
+      options:
+          - text:
+              en: |
+                Balance
+              default: en
+            next_screen: Balance
+          - text:
+               en: |
+                 Phone Number
+               default: en
+            next_screen: PhoneNumber
+
+      Lets go through it, the welcome_screen, has properites,
+      type: sets the type of screen to render to the user
+      text: The text the user on phone will see.
+      options: The choices from which the user should choose from.
+      error_message: the Text to render to the user in case he does not choose from the
+      options that were displayed.
+
+
+To test this app, lets use postman.
+
+First lets run the application:
+    python manage.py migrate
+    python manage.py runserver 8006
+
+
+
+Sample interactions,
+
+[welcome screen][welcome-screen.png]
+
+
+User respond with `1` and is served with his balance information.
+
+[Balance screen][balance-screen.png]
+
+We are done, for more info, check our prod code, read on django and ussd airflow.
 

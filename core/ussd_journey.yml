@@ -1,0 +1,36 @@
+initial_screen: welcome_screen
+
+welcome_screen:
+  type: menu_screen
+  text:
+     en:
+       Welcome
+  error_message:
+    en: |
+      Invalid selection. Please try again.
+  options:
+      - text:
+          en: |
+            Balance
+          default: en
+        next_screen: Balance
+      - text:
+           en: |
+             Phone Number
+           default: en
+        next_screen: PhoneNumber
+
+
+Balance:
+  type: quit_screen
+  text:
+    en: |
+      Your balance is KES 100.
+    default: en
+
+PhoneNumber:
+  type: quit_screen
+  text:
+    en: |
+      Your phone number is {{phone_number}}.
+    default: en
