@@ -1,0 +1,3 @@
+django
+ussd_airflow
+requests

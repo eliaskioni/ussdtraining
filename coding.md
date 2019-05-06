@@ -30,4 +30,59 @@ A virtual environment is a tool that helps to keep dependencies required by diff
 This project is initialized with Django, Lets add an application. I encourage you to create one for yourself.
 I avoid adding the documents for it here as its out of the scope of this tutorial.
 
-python manage.py startapp core
+To add a django app;
+
+    python manage.py startapp core
+
+
+Next, we add dependecies that we require to complete this app.
+
+1. [Ussd Airflow](https://django-ussd-airflow.readthedocs.io/en/latest/quick_start.html)
+   This module will simplify our work by;
+    1. Handling USSD sessions
+    2. Processing users input
+    3. Serving the right response to the user.
+
+    New terms:
+    What is a session in respect to USSD. A session is a unique timed period, where a user can
+    interact with a USSD application. This interaction means  a specified flow or journey which
+    a customer follows to get value out of the application.
+
+    User input: Is the user response as they use the USSD application, eg, we ask the user what info
+    he needs, `1` for account balance or `2` for phone number. User responds with `1` for account
+    balance. This is the user input.
+
+    Serving response to user.
+    After user selects `1` for account balance, the app echoes his account balance, this process is what is referred
+    to as serving response to user in this tutorial.
+
+To add ussd_airflow, we add this change in the requirements.txt file.
+
+    'ussd_airflow'
+Because ussd_airflow is a django app, we add ussd_airflow in the settings file, to make django load it,
+as follows.
+Edit `UssdIntroduction/settings.py` and make this change in the INSTALLED_APPS section, to look as this.
+
+        INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'ussd.apps.UssdConfig',
+    'core'
+]
+ Notice we have add 'ussd.apps.UssdConfig' and 'core'.
+
+ With the above change, lets proceed to the next stage.
+
+ The MNO will make requests to our application, and we shall respond with a response to be
+ displayed to the user.
+ This means we need to expose an endpoint that the mno can make standard HTTP requests to.
+
+ Lets do this.
+
+
+
+
